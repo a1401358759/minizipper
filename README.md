@@ -1,33 +1,34 @@
 # MiniZipper
 
-一个Python库，用于创建zip文件，支持标准zip和密码加密zip，确保生成的zip文件可以在Windows、macOS、Linux等所有平台上正常解压。
+A Python library for creating zip files, supporting both standard zip and password-encrypted zip, ensuring that generated zip files can be extracted normally on Windows, macOS, Linux and other platforms.
 
-## 特性
+## Features
 
-- ✅ **跨平台兼容**：生成的zip文件在所有主流操作系统上都能正常解压
-- ✅ **多种加密算法**：支持5种不同的加密算法选择
-- ✅ **简单易用**：简洁的API，几行代码即可创建加密zip
-- ✅ **无外部依赖**：仅使用Python标准库，无需安装额外包
-- ✅ **命令行工具**：提供便捷的命令行界面
-- ✅ **批量处理**：支持单个文件、目录或批量文件压缩
+- ✅ **Cross-platform compatibility**: Generated zip files can be extracted normally on all major operating systems
+- ✅ **Multiple encryption algorithms**: Supports 5 different encryption algorithm choices
+- ✅ **Easy to use**: Simple API, create encrypted zip with just a few lines of code
+- ✅ **No external dependencies**: Uses only Python standard library, no additional packages required
+- ✅ **Command line tool**: Provides convenient command line interface
+- ✅ **Batch processing**: Supports single file, directory or batch file compression
+- ✅ **Context manager support**: Automatic cleanup of sensitive data with `with` statements
 
-## 支持的加密算法
+## Supported Encryption Algorithms
 
-| 算法 | 标识符 | 描述 | 安全性 |
-|------|--------|------|--------|
-| XOR | `xor` | 简单XOR加密（默认） | 基础 |
-| HMAC-SHA256 | `hmac_sha256` | 基于HMAC-SHA256的加密 | 高 |
-| AES-Like | `aes_like` | 类AES多轮加密 | 中高 |
-| Double XOR | `double_xor` | 双重XOR加密 | 中 |
-| Custom Hash | `custom_hash` | 多哈希算法组合加密 | 中高 |
+| Algorithm | Identifier | Description | Security Level |
+|-----------|------------|-------------|----------------|
+| XOR | `xor` | Simple XOR encryption (default) | Basic |
+| HMAC-SHA256 | `hmac_sha256` | HMAC-SHA256 based encryption | High |
+| AES-Like | `aes_like` | AES-like multi-round encryption | Medium-High |
+| Double XOR | `double_xor` | Double XOR encryption | Medium |
+| Custom Hash | `custom_hash` | Multi-hash algorithm combination encryption | Medium-High |
 
-## 安装
+## Installation
 
 ```bash
 pip install minizipper
 ```
 
-或者从源码安装：
+Or install from source:
 
 ```bash
 git clone https://github.com/a1401358759/minizipper.git
@@ -35,163 +36,163 @@ cd minizipper
 pip install -e .
 ```
 
-## 快速开始
+## Quick Start
 
-### 基本用法
+### Basic Usage
 
 ```python
 from minizipper import SecureZipper, EncryptionAlgorithm
 
-# 创建zipper实例
+# Create zipper instance
 zipper = SecureZipper()
 
-# 创建标准zip文件
+# Create standard zip file
 zipper.create_zip("my_file.txt", "output.zip")
 
-# 创建加密zip文件（使用默认XOR算法）
+# Create encrypted zip file (using default XOR algorithm)
 zipper.setpassword("mypassword123")
 zipper.create_zip("my_file.txt", "encrypted.zip")
 
-# 使用特定加密算法
+# Use specific encryption algorithm
 zipper.setpassword("mypassword123", EncryptionAlgorithm.HMAC_SHA256)
 zipper.create_zip("my_file.txt", "secure.zip")
 ```
 
-### 压缩目录
+### Compress Directory
 
 ```python
 from minizipper import SecureZipper
 
 zipper = SecureZipper()
 
-# 压缩整个目录
+# Compress entire directory
 zipper.create_zip("my_directory", "archive.zip")
 
-# 包含隐藏文件
+# Include hidden files
 zipper.create_zip("my_directory", "archive.zip", include_hidden=True)
 ```
 
-### 批量文件压缩
+### Batch File Compression
 
 ```python
 from minizipper import SecureZipper
 
 zipper = SecureZipper()
 
-# 压缩多个文件
+# Compress multiple files
 files = ["file1.txt", "file2.txt", "file3.txt"]
 zipper.create_zip_from_files(files, "multiple_files.zip")
 
-# 指定基础目录
+# Specify base directory
 zipper.create_zip_from_files(files, "multiple_files.zip", base_dir="/path/to/base")
 ```
 
-### 解压文件
+### Extract Files
 
 ```python
 from minizipper import SecureZipper
 
 zipper = SecureZipper()
 
-# 解压标准zip文件
+# Extract standard zip file
 zipper.extract_zip("archive.zip", "extracted_folder")
 
-# 解压加密zip文件
+# Extract encrypted zip file
 zipper.setpassword("mypassword123")
 zipper.extract_zip("encrypted.zip", "extracted_folder")
 ```
 
-## 命令行工具
+## Command Line Tool
 
-### 基本用法
+### Basic Usage
 
 ```bash
-# 压缩单个文件
+# Compress single file
 python -m minizipper.cli -s my_file.txt -o output.zip
 
-# 压缩目录
+# Compress directory
 python -m minizipper.cli -s my_directory -o archive.zip
 
-# 压缩多个文件
+# Compress multiple files
 python -m minizipper.cli -f file1.txt file2.txt file3.txt -o multiple.zip
 ```
 
-### 加密功能
+### Encryption Features
 
 ```bash
-# 使用默认算法（XOR）加密
+# Use default algorithm (XOR) encryption
 python -m minizipper.cli -s my_file.txt -o encrypted.zip --password mypass123
 
-# 使用特定算法加密
+# Use specific algorithm encryption
 python -m minizipper.cli -s my_file.txt -o secure.zip --password mypass123 --algorithm hmac_sha256
 
-# 查看所有可用算法
+# View all available algorithms
 python -m minizipper.cli --list-algorithms
 ```
 
-### 解压功能
+### Extraction Features
 
 ```bash
-# 解压标准zip文件
+# Extract standard zip file
 python -m minizipper.cli -o archive.zip --extract extracted_folder
 
-# 解压加密zip文件
+# Extract encrypted zip file
 python -m minizipper.cli -o encrypted.zip --extract extracted_folder --password mypass123
 ```
 
-### 高级选项
+### Advanced Options
 
 ```bash
-# 包含隐藏文件
+# Include hidden files
 python -m minizipper.cli -s my_directory -o archive.zip --include-hidden
 
-# 设置压缩级别
+# Set compression level
 python -m minizipper.cli -s my_file.txt -o output.zip --compression-level 9
 
-# 测试zip文件
+# Test zip file
 python -m minizipper.cli -s my_file.txt -o test.zip --test
 
-# 详细输出
+# Verbose output
 python -m minizipper.cli -s my_file.txt -o output.zip -v
 ```
 
-## API 参考
+## API Reference
 
-### SecureZipper 类
+### SecureZipper Class
 
-#### 构造函数
+#### Constructor
 
 ```python
 SecureZipper(compression_level: int = 6)
 ```
 
-- `compression_level`: 压缩级别 (0-9)，默认为6
+- `compression_level`: Compression level (0-9), default is 6
 
-#### 上下文管理器支持
+#### Context Manager Support
 
-SecureZipper 支持上下文管理器，可以使用 `with` 语句：
+SecureZipper supports context managers and can be used with `with` statements:
 
 ```python
-# 使用上下文管理器（推荐）
+# Using context manager (recommended)
 with SecureZipper() as zipper:
     zipper.setpassword("mypassword123", EncryptionAlgorithm.HMAC_SHA256)
     zipper.create_zip("source_folder", "encrypted.zip")
-    # 自动清理敏感数据
+    # Automatic cleanup of sensitive data
 
-# 传统方式
+# Traditional way
 zipper = SecureZipper()
 zipper.setpassword("mypassword123")
 zipper.create_zip("source_folder", "encrypted.zip")
-# 需要手动清理
+# Manual cleanup required
 ```
 
-**上下文管理器的优势：**
-- 自动清理敏感数据（密码、算法设置）
-- 异常处理和日志记录
-- 更清晰的代码结构
-- 资源管理
+**Context Manager Benefits:**
+- Automatic cleanup of sensitive data
+- Exception handling and logging
+- Cleaner, more readable code
+- Resource management
 
-#### 主要方法
+#### Main Methods
 
 ##### setpassword()
 
@@ -199,10 +200,10 @@ zipper.create_zip("source_folder", "encrypted.zip")
 setpassword(password: str, algorithm: EncryptionAlgorithm = EncryptionAlgorithm.XOR)
 ```
 
-设置加密密码和算法。
+Set encryption password and algorithm.
 
-- `password`: 加密密码，如果为None或空字符串则禁用加密
-- `algorithm`: 加密算法，默认为XOR
+- `password`: Encryption password, if None or empty string, encryption is disabled
+- `algorithm`: Encryption algorithm, default is XOR
 
 ##### create_zip()
 
@@ -214,12 +215,12 @@ create_zip(
 ) -> str
 ```
 
-创建zip文件。
+Create zip file.
 
-- `source_path`: 要压缩的文件或目录路径
-- `output_path`: 输出的zip文件路径
-- `include_hidden`: 是否包含隐藏文件
-- 返回: 创建的zip文件路径
+- `source_path`: Path to file or directory to compress
+- `output_path`: Output zip file path
+- `include_hidden`: Whether to include hidden files
+- Returns: Created zip file path
 
 ##### create_zip_from_files()
 
@@ -231,12 +232,12 @@ create_zip_from_files(
 ) -> str
 ```
 
-从多个文件创建zip文件。
+Create zip file from multiple files.
 
-- `file_paths`: 要压缩的文件路径列表
-- `output_path`: 输出的zip文件路径
-- `base_dir`: 基础目录，用于计算相对路径
-- 返回: 创建的zip文件路径
+- `file_paths`: List of file paths to compress
+- `output_path`: Output zip file path
+- `base_dir`: Base directory for calculating relative paths
+- Returns: Created zip file path
 
 ##### extract_zip()
 
@@ -247,11 +248,11 @@ extract_zip(
 ) -> bool
 ```
 
-解压zip文件。
+Extract zip file.
 
-- `zip_path`: zip文件路径
-- `extract_path`: 解压目标路径
-- 返回: 是否解压成功
+- `zip_path`: Zip file path
+- `extract_path`: Extraction target path
+- Returns: Whether extraction was successful
 
 ##### test_zip_extraction()
 
@@ -259,97 +260,86 @@ extract_zip(
 test_zip_extraction(zip_path: Union[str, Path]) -> bool
 ```
 
-测试zip文件是否可以正常解压。
+Test if zip file can be extracted normally.
 
-- `zip_path`: zip文件路径
-- 返回: 是否可以正常解压
+- `zip_path`: Zip file path
+- Returns: Whether it can be extracted normally
 
-### EncryptionAlgorithm 枚举
-
-```python
-class EncryptionAlgorithm(Enum):
-    XOR = "xor"                    # 简单XOR加密（默认）
-    HMAC_SHA256 = "hmac_sha256"    # HMAC-SHA256加密
-    AES_LIKE = "aes_like"          # 类AES加密（使用标准库模拟）
-    DOUBLE_XOR = "double_xor"      # 双重XOR加密
-    CUSTOM_HASH = "custom_hash"    # 自定义哈希加密
-```
-
-## 加密算法详解
+## Encryption Algorithm Details
 
 ### 1. XOR (xor)
-- **原理**: 简单的异或加密
-- **特点**: 速度快，安全性基础
-- **适用场景**: 快速加密，对安全性要求不高的场景
+- **Principle**: Simple XOR operation with key
+- **Features**: Fast, lightweight
+- **Use cases**: Basic protection needs
 
 ### 2. HMAC-SHA256 (hmac_sha256)
-- **原理**: 基于HMAC-SHA256的加密，使用随机盐值
-- **特点**: 安全性高，每次加密结果不同
-- **适用场景**: 高安全性要求的场景
+- **Principle**: HMAC-SHA256 hash-based encryption
+- **Features**: High security, salt-based
+- **Use cases**: High security requirements
 
 ### 3. AES-Like (aes_like)
-- **原理**: 模拟AES的多轮加密过程
-- **特点**: 中等安全性，使用多轮密钥
-- **适用场景**: 平衡安全性和性能的场景
+- **Principle**: Simulated AES multi-round encryption
+- **Features**: Medium-high security
+- **Use cases**: Balance between security and performance
 
 ### 4. Double XOR (double_xor)
-- **原理**: 双重XOR加密，使用正向和反向密钥
-- **特点**: 比单XOR更安全
-- **适用场景**: 需要比XOR更高安全性的场景
+- **Principle**: Two rounds of XOR encryption
+- **Features**: Enhanced XOR security
+- **Use cases**: Medium security requirements
 
 ### 5. Custom Hash (custom_hash)
-- **原理**: 结合MD5、SHA1、SHA256三种哈希算法
-- **特点**: 多重哈希保护
-- **适用场景**: 需要多重保护的场景
+- **Principle**: Combination of MD5, SHA1, SHA256 hash algorithms
+- **Features**: Multi-hash protection
+- **Use cases**: Scenarios requiring multi-layer protection
 
-## 示例
+## Examples
 
-### 示例1：基本文件压缩
+### Example 1: Basic File Compression
 
 ```python
 from minizipper import SecureZipper
 
-# 创建zipper
+# Create zipper
 zipper = SecureZipper()
 
-# 压缩单个文件
+# Compress single file
 zipper.create_zip("document.txt", "document.zip")
-print("文件压缩完成！")
+print("File compression completed!")
 ```
 
-### 示例2：目录压缩
+### Example 2: Directory Compression
 
 ```python
 from minizipper import SecureZipper
 
 zipper = SecureZipper()
 
-# 压缩整个项目目录
+# Compress entire project directory
 zipper.create_zip("my_project", "project_backup.zip", include_hidden=True)
-print("项目备份完成！")
+print("Project backup completed!")
 ```
 
-### 示例3：加密压缩
+### Example 3: Encrypted Compression
 
 ```python
 from minizipper import SecureZipper, EncryptionAlgorithm
 
 zipper = SecureZipper()
 
-# 使用HMAC-SHA256算法加密
+# Use HMAC-SHA256 algorithm encryption
 zipper.setpassword("secure_password_123", EncryptionAlgorithm.HMAC_SHA256)
 zipper.create_zip("sensitive_data", "encrypted_backup.zip")
-print("敏感数据加密备份完成！")
+print("Sensitive data encrypted backup completed!")
 ```
 
-### 示例4：批量文件处理
+### Example 4: Batch File Processing
 
 ```python
 from minizipper import SecureZipper
 
 zipper = SecureZipper()
 
-# 批量压缩多个文件
+# Batch compress multiple files
 files = [
     "report1.pdf",
     "report2.pdf",
@@ -358,41 +348,55 @@ files = [
 ]
 
 zipper.create_zip_from_files(files, "reports.zip")
-print("批量文件压缩完成！")
+print("Batch file compression completed!")
 ```
 
-### 示例5：解压和验证
+### Example 5: Extract and Verify
 
 ```python
 from minizipper import SecureZipper
 
 zipper = SecureZipper()
 
-# 测试zip文件完整性
+# Test zip file integrity
 if zipper.test_zip_extraction("archive.zip"):
-    print("zip文件完整，开始解压...")
+    print("Zip file is intact, starting extraction...")
 
-    # 解压文件
+    # Extract file
     if zipper.extract_zip("archive.zip", "extracted_files"):
-        print("解压成功！")
+        print("Extraction successful!")
     else:
-        print("解压失败！")
+        print("Extraction failed!")
 else:
-    print("zip文件损坏！")
+    print("Zip file is corrupted!")
 ```
 
-## 注意事项
+### Example 6: Context Manager Usage
 
-1. **密码安全**: 请使用强密码，避免使用简单密码
-2. **算法选择**: 根据安全需求选择合适的加密算法
-3. **文件大小**: 加密会增加文件大小，特别是HMAC算法
-4. **兼容性**: 加密zip文件只能使用本库解压
-5. **备份**: 重要文件请做好备份，避免密码丢失
+```python
+from minizipper import SecureZipper, EncryptionAlgorithm
 
-## 贡献
+# Using context manager (recommended)
+with SecureZipper() as zipper:
+    zipper.setpassword("mypassword123", EncryptionAlgorithm.HMAC_SHA256)
+    zipper.create_zip("source_folder", "encrypted.zip")
+    # Automatic cleanup of sensitive data
 
-欢迎提交Issue和Pull Request！
+print("Context manager automatically cleaned up sensitive data")
+```
 
-## 许可证
+## Notes
+
+1. **Password Security**: Please use strong passwords, avoid using simple passwords
+2. **Algorithm Selection**: Choose appropriate encryption algorithm based on security requirements
+3. **File Size**: Encryption will increase file size, especially HMAC algorithm
+4. **Compatibility**: Encrypted zip files can only be extracted using this library
+5. **Backup**: Please backup important files to avoid password loss
+
+## Contributing
+
+Welcome to submit Issues and Pull Requests!
+
+## License
 
 MIT License

@@ -8,7 +8,7 @@ Supports multiple encryption algorithm choices.
 
 from .secure_zipper import EncryptionAlgorithm, SecureZipper, ZipError
 
-__version__ = "0.0.1"
+__version__ = "0.0.2"
 __author__ = "yxuefeng"
 __email__ = "a1401358759@outlook.com"
 
