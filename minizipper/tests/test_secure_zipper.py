@@ -273,10 +273,22 @@ class TestSecureZipper:
         test_file = Path(self.temp_dir) / "test.txt"
         test_file.write_text("Test content")
 
-        # Try to create encrypted zip without password
-        with pytest.raises(ZipError, match="Password cannot be empty"):
-            self.zipper.setpassword("")
-            self.zipper.create_zip(test_file, "output.zip")
+        # Set empty password (should disable encryption)
+        self.zipper.setpassword("")
+
+        # Should create standard zip (not encrypted)
+        output_file = Path(self.temp_dir) / "output.zip"
+        result = self.zipper.create_zip(test_file, output_file)
+
+        # Verify it's a standard zip, not encrypted
+        assert result == str(output_file)
+        assert output_file.exists()
+
+        # Test that it's not encrypted by trying to extract without password
+        extract_dir = Path(self.temp_dir) / "extracted"
+        success = self.zipper.extract_zip(output_file, extract_dir)
+        assert success
+        assert (extract_dir / "test.txt").read_text() == "Test content"
 
     def test_algorithm_compatibility(self):
         """Test algorithm compatibility"""
